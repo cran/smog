@@ -1,5 +1,5 @@
 # smog
-[![Travis-CI Build Status](https://travis-ci.org/chongma1989/smog.svg?branch=master)](https://travis-ci.org/chongma1989/smog)
+[![Travis-CI Build Status](https://travis-ci.com/chongma8903/smog.svg?branch=master)](https://travis-ci.com/github/chongma8903/smog)
 
 Structural Modeling by using Overlapped Group Penalty
 
@@ -10,7 +10,7 @@ install.packages("smog")
 
 # or install the source type package from GitHub:
 # install.packages("devtools")
-devtools::install_github("chongma1989/smog")
+devtools::install_github("chongma8903/smog")
 ```
 
 ## Features
@@ -20,11 +20,29 @@ devtools::install_github("chongma1989/smog")
 * incorporates the iterative shrinkage-thresholding algorithm (ISTA) and the alternating direction method of multipliers algorithms (ADMM).
 
 ## Usage
-Create a new S3 class of `smog`, and the kernal function `smog.default` (or `smog.formula`) returns an object of the S3 class `smog`. 
+Create a new S3 class of `smog`, and the kernal function `smog.default` (or `smog.formula`) returns an object of the S3 class `smog`. The kernel functions include:
 
-* `smog.default` input the data and parameters to yield a model of the class `smog`.
-* `smog.formula` can accept `formula` to fit the model for the data.
-* `predict.smog` produces the predicted response values for new data, provided a fitted model. 
-* `cv.smog` provides cross-validation analysis based on the data.  
-* `plot.smog` displays a panel of three plots to reflect the convergence performance in the algorithm.
-* `print.smog` outputs the coefficients table for the fitted model.
+* `smog.default`: input the data and parameters to yield a model of the class `smog`.
+* `smog.formula`: can accept `formula` to fit the model for the data.
+* `predict.smog`: produces the predicted response values for new data, provided a fitted model. 
+* `cv.smog`: provides cross-validation analysis based on the data.  
+* `cv.cglasso`: cross-validation for conditional group lasso approach  
+
+
+## Examples
+```r
+sim = sim_rct_biomarker(n = 100, p = 20, p_prog = 2, p_pred = 2, p_both = 2)
+y = sim$Y
+x = sim$M
+d = 20
+g = c(d+1, rep(1:d,2))
+v = c(rep(0,1), rep(1,2*d))
+label = c("trt", rep(c("prog","pred"), c(d,d)))
+
+sfit1 = cv.smog(x,y,g,v,label,family = "gaussian", type = "AIC")
+plot(sfit1)
+
+sfit2 = cv.cglasso(x,y,g,v,label,family = "gaussian", nlambda.max = 20)
+plot(sfit2)
+
+```
